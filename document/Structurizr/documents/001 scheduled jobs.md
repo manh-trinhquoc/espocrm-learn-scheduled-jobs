@@ -3,7 +3,6 @@
 
 ### Câu hỏi
 - điều kiện success
-- cơ chế re-try: attemps
 
 ### Config.php
 ```php
@@ -21,6 +20,19 @@
 
 ### Cron.php
 - Tạo job mới trước, sau đó run pending
+- Các status của Job
+```php
+namespace Espo\Core\Job\Job;
+class Status
+{
+    public const PENDING = 'Pending';
+    public const READY = 'Ready';
+    public const RUNNING = 'Running';
+    public const SUCCESS = 'Success';
+    public const FAILED = 'Failed';
+}
+
+```
 
 ### Điều kiện fail job
 1. markJobsFailedByNotExistingProcesses
@@ -53,7 +65,6 @@
 
 ###  Queue Q0 Q1 E0
 - Chạy các job được setup bởi ` Espo\Core\Job\JobScheduler `
-
 - đây là tính năng lên lịch các Job mà không thông qua Scheduled Jobs. Có thể đăng ký trực tiếp Class chạy.
 Ví dụ ` Espo\Tools\Stream\HookProcessor `
 ```php
@@ -68,6 +79,33 @@ Ví dụ ` Espo\Tools\Stream\HookProcessor `
         ->schedule();
 ```
 
+- Nếu implements interface Job chứ không phải interface JobDataLess thì sẽ truyền vào hàm run($data) 
+    - tham khảo application\Espo\Core\Job\JobRunner.php(212)
+    - method của data
+    ```php
+    array(9) {
+        [0]=>
+        string(11) "__construct"
+        [1]=>
+        string(6) "create"
+        [2]=>
+        string(6) "getRaw"
+        [3]=>
+        string(3) "get"
+        [4]=>
+        string(3) "has"
+        [5]=>
+        string(11) "getTargetId"
+        [6]=>
+        string(13) "getTargetType"
+        [7]=>
+        string(12) "withTargetId"
+        [8]=>
+        string(14) "withTargetType"
+    }
+
+    ```
+
 1. Q0
 - Chạy ASAP
 - limit : Q0_PORTION_NUMBER = 200;
@@ -79,3 +117,28 @@ Ví dụ ` Espo\Tools\Stream\HookProcessor `
 3. E0
 - Chạy ASAP gửi Email
 - limit:  E0_PORTION_NUMBER = 100;
+
+### Tips & Tricks
+1. Truyền dữ liệu
+- schedule thủ công hoặc dùng JobScheduler để ghi được data
+- Tất cả dữ liệu cần pass ghi vào cột data, bao gồm cả các thông tin của Job
+- Khai báo job implement Job để lấy data
+
+2. retry
+- Can thiệp vào giá trị attempts > 0
+
+3. Run job manually
+```php
+
+    $jobEntity = $this->getEntityManager()->getEntity('Job');
+
+    $jobEntity->set([
+        'name' => $data->name,
+        'status' => 'Pending',
+        'scheduledJobId' => $data->id,
+        'executeTime' => $nextDate,
+    ]);
+
+    $this->getEntityManager()->saveEntity($jobEntity)
+
+```
