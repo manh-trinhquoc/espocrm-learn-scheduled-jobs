@@ -1,0 +1,43 @@
+{
+  "id" : 1,
+  "name" : "Espo Plugin",
+  "description" : "Description",
+  "lastModifiedDate" : "2023-10-20T03:46:48Z",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlICJFc3BvIFBsdWdpbiIgewogICAgIWFkcnMgZGVjaXNpb25zCiAgICAhZG9jcyBkb2N1bWVudHMKICAgIG1vZGVsIHsKICAgICAgICAKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgCgogICAgICAgIHRoZW1lIGRlZmF1bHQKCiAgICAgICAgLy8gdGhlbWVzIGh0dHBzOi8vc3RhdGljLnN0cnVjdHVyaXpyLmNvbS90aGVtZXMvbWljcm9zb2Z0LWF6dXJlLTIwMjEuMDEuMjYvdGhlbWUuanNvbgogICAgfQoKfQo="
+  },
+  "configuration" : { },
+  "model" : { },
+  "documentation" : {
+    "sections" : [ {
+      "content" : "## Parent - children team\n\n- Thử triển khai logic team cha - con trên espocrm\n- Nguyên tắc:\n1. user sẽ được thao tác với các bản ghi thuộc team con tương tự như các bản ghi thuộc team mình\n\n## Hướng triển khai chung\n- mở quyền thao tác với bản ghi là all và dùng hook, custom code ở backend để chặn các thao tác không được phép\n- team sẽ có thêm 1 trường là parent. \n- tạo role có quyền thao tác với mọi record của entity và gán cho User\n- User sẽ có thêm 1 trường là fullAccessRoles lưu các role full access ở trên\n- Viết hàm merge acl custom với đầu vào là các role loại trừ các role full access\n- Nếu kết quả là team thì check tiếp logic record có thuộc team con hay không\n\n## Demo quyền đọc contact\n- Team 1 là bố của Team 1 1. Tương ứng là User 1 và User 1 1.\n- User 1 và User 1 1 có quyền tạo và đọc bản ghi cùng team.\n- Contact 1 và Contact 1 1 được gán User 1 và User 1 1 tương ứng.\n- Contact 2 và Contact 2 2 được gán Team 1 và Team 1 1 tương ứng\n- User 1 sẽ xem được toàn bộ 4 Contact\n- User 1 1 sẽ chỉ xem được Contact 1 1 và Contact 2 2.\n",
+      "format" : "Markdown",
+      "filename" : "001 parent children team.md",
+      "order" : 1,
+      "title" : ""
+    } ],
+    "decisions" : [ {
+      "content" : "# 0. File template\n\nDate: 2023-08-01\n\n## Status\n\nAccepted\n\n## Context\n\n- Bản template để note chung về frame work và để người dùng clone file\n\n## Decision\n- Khi trỏ đến node khác ta dùng cú pháp  title [text](link). Title sẽ bị đè bởi status chuẩn như Accepted, Proposed\n- [Xem các ví dụ khác](https://github.com/npryce/adr-tools/tree/master/tests)\n- We will use Architecture Decision Records, as described by Michael Nygard in [this article](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions)\n\n## Consequences\n",
+      "format" : "Markdown",
+      "id" : "0",
+      "title" : "File template",
+      "date" : "2023-08-01T00:00:00Z",
+      "status" : "Accepted"
+    }, {
+      "content" : "# . version 0. 0. 1\n\nDate: 2023-10-19\n\n## Status\n\nAccepted\n\n## Release Note\n- no build file since this is a proof of concept\n",
+      "format" : "Markdown",
+      "id" : "1",
+      "title" : "version 0. 0. 1",
+      "date" : "2023-10-19T00:00:00Z",
+      "status" : "Accepted"
+    } ]
+  },
+  "views" : {
+    "configuration" : {
+      "branding" : { },
+      "styles" : { },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ],
+      "terminology" : { }
+    }
+  }
+}
